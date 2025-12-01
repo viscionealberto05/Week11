@@ -32,6 +32,9 @@ class DAO:
         #diversi da loro stessi e devo contare quante volte sono stati esposti con altri
         #in esibizioni diverse
 
+        #per ognuno dei due oggetti, chiaramente se l'id esibizione coincide ci sarà la coppia
+        #(1,2) e (2,1), dunque me ne basta solo una dei due (l'occorenza sarà una sola siccome
+        #la mostra è la stessa, dunque non avrò problemi col count)
 
         query =  """SELECT eo1.object_id AS o1, eo2.object_id AS o2, COUNT(*) AS peso
                 FROM exhibition_objects eo1, exhibition_objects eo2
@@ -50,3 +53,16 @@ class DAO:
         conn.close()
         return result
 
+    @staticmethod
+    def readConnessioniAlt(objects_dict):
+        conn = DBConnect.get_connection()
+        result = []
+        cursor = conn.cursor(dictionary=True)
+        query = "SELECT * FROM exhibition_objects"
+        cursor.execute(query)
+        for row in cursor:
+            #Immagino di creare una classe connessione alternativa, magari oggetto_esibito, e cercare le effettive connessioni nel model
+            result.append(OggettoEsibito(row["object_id"], row["exhibition_id"]))
+        cursor.close()
+        conn.close()
+        return result

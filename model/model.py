@@ -37,17 +37,37 @@ class Model:
         for c in connessioni:
             self._grafo.add_edge(c.o1,c.o2,weight=c.peso) #peso?
 
+    def buildGrafoAlt(self):
+        self._grafo.add_nodes_from(self._objects_list)
+
+        oggetti_esposti = DAO.readConnessioniAlt(self._objects_dict)
+        connessioni = []
+
+        pass
+
+
+
     def calcolaConnessa(self, id_nodo):
-        nodo_sorgente = self._objects_dict[id_nodo]
-        successori = nx.dfs_successors(self._grafo, nodo_sorgente)
-        #for nodo in successori:
-        print(f"Successori {len(successori)}")
 
-        predecessori = nx.dfs_predecessors(self._grafo, nodo_sorgente)
-        #for nodo in predecessori:
-        print(f"Predecessori {len(predecessori)}")
+        #Ogni volta che la funzione viene chiamata dal controller mi assicuro
+        #di pulire il grafico e ricostruirlo per evitare sovrapposizioni
 
-        #Ottengo
-        albero = nx.dfs_tree(self._grafo, nodo_sorgente)
-        print(f"Albero {albero}")
-        return len(albero.nodes)
+        self._grafo.clear()
+        self.buildGrafo()
+
+        try:
+            nodo_sorgente = self._objects_dict[id_nodo]
+            successori = nx.dfs_successors(self._grafo, nodo_sorgente)
+            #for nodo in successori:
+            print(f"Successori {len(successori)}")
+
+            predecessori = nx.dfs_predecessors(self._grafo, nodo_sorgente)
+            #for nodo in predecessori:
+            print(f"Predecessori {len(predecessori)}")
+
+            #Ottengo
+            albero = nx.dfs_tree(self._grafo, nodo_sorgente)
+            print(f"Albero {albero}")
+            return len(albero.nodes)
+        except KeyError:
+            return str(f"ID: {id_nodo} non valido")

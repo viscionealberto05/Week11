@@ -22,7 +22,11 @@ class Controller:
             #se sono qui osso usare id per le operazioni seguenti
             numNodi = self._model.calcolaConnessa(id)
             self._view.txt_result.controls.clear()
-            self._view.txt_result.controls.append(ft.Text(f"{numNodi}"))
+            if isinstance(numNodi,str):
+                self._view.txt_result.controls.append(ft.Text(f"{numNodi}"))
+            else:
+                self._view.txt_result.controls.append(ft.Text(f"Dim. componente connessa: {numNodi}"))
+            self._view.update_page()
 
             #RICORDARSI DI PULIRE IL GRAFO OGNI VOLTA CHE VIENE SCHISCIATO IL BOTTONE
 
